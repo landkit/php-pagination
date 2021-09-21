@@ -160,16 +160,16 @@ class Pagination
     }
 
     /**
-     * @param string|null $parentClass
+     * @param string $parentClass
      * @param bool $fixedFirstAndLastPage
      * @return string
      */
-    public function render(string $parentClass = null, bool $fixedFirstAndLastPage = true): string
+    public function render(string $parentClass = '', bool $fixedFirstAndLastPage = true): string
     {
-        $class = $parentClass ?? 'pagination';
-
         if ($this->totalRows > $this->limit):
-            $pager = "<ul class='{$class}'>";
+            $parentClass = $parentClass ?: 'pagination';
+
+            $pager = "<ul class='{$parentClass}'>";
             $pager .= $this->firstPage($fixedFirstAndLastPage);
             $pager .= $this->beforePages();
             $pager .= "<li class='page-item active'><span class='page-link'>{$this->page}</span></li>";
@@ -196,7 +196,9 @@ class Pagination
         string $ofTotal = 'de',
         string $end = 'registros'
     ): string {
-        if ($this->page == 1) {
+        if ($this->page == 0) {
+            return '';
+        } elseif ($this->page == 1) {
             $countStart = $this->page;
         } elseif ($this->page == 2) {
             $countStart = $this->limit + 1;
